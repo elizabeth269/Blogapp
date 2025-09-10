@@ -11,6 +11,8 @@
 
     <h1>an image should be here</h1>
     <h2>{{ posts.title}}</h2>
+    {{ posts.category }} this should be a link to all the health related blogs
+    <p><a href="{% url 'edit' posts.id %}">Edit blog Post</a></p>
     <h4>Authur {{posts.created_at|timesince}}</h4>
     <p>{{ posts.body }}</p>
 
