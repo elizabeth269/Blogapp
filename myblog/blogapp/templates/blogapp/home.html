@@ -3,14 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>home</title>
   </head>
   <body>
     <h1>Elizabeth's Blog</h1>
+    <hr />
     {% for post in posts %}
-    <h2>{{ post.title}}</h2>
+    <p>an image should be here</p>
+    <p>
+      {{ post.category }} this should be a link to all the health related blogs
+    </p>
+    <a href="{% url 'post' post.id %}">
+      <h2>{{ post.title}}</h2>
+    </a>
+    <p>{{ post.description }}</p>
+    <h4>Authur {{post.created_at|timesince}}</h4>
+    <hr />
 
-    <p>{{ post.body}}</p>
     {% endfor %}
   </body>
 </html>
