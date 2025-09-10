@@ -59,3 +59,11 @@ def editPost(request, pk):
     return render(request, 'blogapp/editPost.html', context)
 
     
+def deletePost(request, pk):
+    post = Post.objects.get(id=pk)
+    if request.method == "POST":
+        post.delete()
+        messages.success(request, f'you have deleted {post.title} successfully')
+        return redirect('home')
+    
+    return render(request, 'blogapp/deletePost.html',{'obj': post})
