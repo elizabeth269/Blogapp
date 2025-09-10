@@ -35,8 +35,9 @@ def loginPage(request):
     context = {'page': page}
     return render(request, 'blogapp/login-register.html', context)
 
-def logoutPage(Request):
-    pass
+def logoutPage(request):
+    logout(request)
+    return redirect('home')
 
 
 def registration(request):
@@ -46,8 +47,9 @@ def registration(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.username = user.username.lower()
+            user.save()
             messages.success(request, 'Registration successful.')
-            return redirect('login-register')
+            return redirect('login')
         else:
             messages.error(request, 'registration is unsuccessful')
 
@@ -56,7 +58,7 @@ def registration(request):
     context = {
         'form': form
     }
-    return render(request, 'blogapp/registration.html', context)
+    return render(request, 'blogapp/login-register.html', context)
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
