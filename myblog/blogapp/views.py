@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
-from .models import Category, Comment, Post
+from .models import Category, Comment, Post, User
 from .forms import PostForm, MyUserCreationForm
 from django.contrib import messages
 from django.db.models import Q
-from django.contrib.auth import authenticate,login, logout,
+from django.contrib.auth import authenticate,login, logout
 
 
 # Create your views here.
@@ -14,7 +14,26 @@ def loginPage(request):
         return redirect('home')
     
     if request.method == 'POST':
+        email = request.POST.get('email').lower()
+        password = request.POST.get('password')
+
+        try:
+            user = User.objects.get(email=email)
+
+        except:
+            messages.error(request, 'user does not exist')
+
+        user = authenticate(request, email=email, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('home')
         
+        else:
+            messages.error(request, 'Username OR password does not exit')
+
+    context = {'page': page}
+    return render(request, 'blogapp/login-register.html', context)
 
 def logoutPage(Request):
     pass
