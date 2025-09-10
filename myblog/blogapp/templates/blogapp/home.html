@@ -9,6 +9,10 @@
   <body>
     <h1>Elizabeth's Blog</h1>
     <a href="{% url 'create'%}"> Create Blog</a>
+    <form action="{% url 'home' %}">
+      <input name="q" placeholder="search for blogs here" />
+    </form>
+    <p>{{posts_count}} posts found</p>
     <hr />
     {% for post in posts %}
     <p>an image should be here</p>

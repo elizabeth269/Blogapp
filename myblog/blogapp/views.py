@@ -2,13 +2,25 @@ from django.shortcuts import render, redirect
 from .models import Category, Comment, Post, Profile
 from .forms import PostForm 
 from django.contrib import messages
+from django.db.models import Q
 
 
 # Create your views here.
 def home(request):
-    posts = Post.objects.all()
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
+
+    posts = Post.objects.filter(
+        Q(title__icontains=q) |
+        Q(category__name__icontains=q) |
+        Q(description__icontains=q)
+    )
+    posts_count = posts.count()
+    
+
     context ={
-        'posts': posts
+        'posts': posts,
+        'posts_count': posts_count,
+
     }
     return render(request, 'blogapp/home.html', context)
 
