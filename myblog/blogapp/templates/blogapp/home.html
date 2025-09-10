@@ -16,9 +16,12 @@
     <hr />
     {% for post in posts %}
     <p>an image should be here</p>
+    {% if category %}
     <p>
       {{ post.category }} this should be a link to all the health related blogs
     </p>
+    {%endif%}
+
     <a href="{% url 'post' post.id %}">
       <h2>{{ post.title}}</h2>
     </a>

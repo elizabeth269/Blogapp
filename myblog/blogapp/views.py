@@ -1,11 +1,21 @@
 from django.shortcuts import render, redirect
-from .models import Category, Comment, Post, Profile
+from .models import Category, Comment, Post
 from .forms import PostForm 
 from django.contrib import messages
 from django.db.models import Q
 
 
 # Create your views here.
+
+def loginPage(request):
+    pass
+
+def logoutPage(Request):
+    pass
+
+def registration(request):
+    pass
+
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
 
