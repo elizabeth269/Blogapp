@@ -1,0 +1,24 @@
+{% extends 'main.html' %} {% block content %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      <form action="" method="POST">
+        {% csrf_token %} {{ form.as_p}} {% if page == login %}
+        <input type="submit" value="submit" />
+
+        <p>Not signed up?</p>
+        <a href="{% url 'register' %}">Sign Up</a>
+        {%endif%}
+        <p>Already registered?</p>
+        <a href="{% url 'login' %}">Login</a>
+      </form>
+    </div>
+  </body>
+</html>
+{% endblock %}

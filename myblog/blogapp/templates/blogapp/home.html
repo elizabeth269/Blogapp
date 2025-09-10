@@ -8,6 +8,12 @@
   </head>
   <body>
     <h1>Elizabeth's Blog</h1>
+    {% if user.is_authenticated%}
+    <p>welcom {{user.username}}</p>
+    <p><a href="{% url 'logout' %}">logout</a></p>
+    {% else %}
+    <p><a href="{%url 'login' %}">login</a></p>
+    {%endif%}
     <a href="{% url 'create'%}"> Create Blog</a>
     <form action="{% url 'home' %}">
       <input name="q" placeholder="search for blogs here" />

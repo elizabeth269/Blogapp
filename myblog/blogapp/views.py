@@ -1,20 +1,43 @@
 from django.shortcuts import render, redirect
 from .models import Category, Comment, Post
-from .forms import PostForm 
+from .forms import PostForm, MyUserCreationForm
 from django.contrib import messages
 from django.db.models import Q
+from django.contrib.auth import authenticate,login, logout,
 
 
 # Create your views here.
 
 def loginPage(request):
-    pass
+    page = 'login'
+    if request.user.is_authenticated:
+        return redirect('home')
+    
+    if request.method == 'POST':
+        
 
 def logoutPage(Request):
     pass
 
+
 def registration(request):
-    pass
+    form = MyUserCreationForm()
+    if request.method == 'POST':
+        form = MyUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            messages.success(request, 'Registration successful.')
+            return redirect('login-register')
+        else:
+            messages.error(request, 'registration is unsuccessful')
+
+    else:
+        form = MyUserCreationForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'blogapp/registration.html', context)
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
@@ -25,7 +48,7 @@ def home(request):
         Q(description__icontains=q)
     )
     posts_count = posts.count()
-    
+    # messages.error(request, 'an error occured')
 
     context ={
         'posts': posts,
