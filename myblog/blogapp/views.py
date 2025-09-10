@@ -22,19 +22,21 @@ def post(request, pk):
 
 
 def createPost(request):
-
     form = PostForm()
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, "Blog post has been created successfully")
-            return redirect('/')
-        
+            return redirect('home')
+        else: 
+            messages.error(request, 'an error occured')
     else:
         form = PostForm()
-        messages.error(request, 'an error occured')
-      
         
-    return render(request, 'createPost.html')
+    context = {
+        'form': form
+    }
+        
+    return render(request, 'blogapp/createPost.html', context)
         
