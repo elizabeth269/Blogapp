@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth import authenticate,login, logout
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+
 
 
 # Create your views here.
@@ -95,7 +97,7 @@ def post(request, pk):
     }
     return render(request, 'blogapp/post.html', context)
 
-
+@login_required(login_url='login')
 def createPost(request):
     form = PostForm()
     if request.method == 'POST':
@@ -115,9 +117,12 @@ def createPost(request):
         
     return render(request, 'blogapp/createPost.html', context)
     
-
+@login_required(login_url='login')
 def editPost(request, pk):
     post = Post.objects.get(id=pk)
+    if request.user != post.author:
+        return HttpResponse("You are not allowed to edit this post.")
+
     form = PostForm(instance=post)
     if request.method == 'POST':
         form = PostForm(request.POST, instance=post)
@@ -133,9 +138,12 @@ def editPost(request, pk):
     
     return render(request, 'blogapp/editPost.html', context)
 
-    
+@login_required(login_url='login')   
 def deletePost(request, pk):
     post = Post.objects.get(id=pk)
+    if request.user != post.author:
+        return HttpResponse("You are not allowed to delete this post.")
+
     if request.method == "POST":
         post.delete()
         messages.success(request, f'you have deleted {post.title} successfully')
@@ -149,22 +157,25 @@ def deletePost(request, pk):
 
 #     return render(request,'blogapp/comments.html', post_comments )
 
-
+@login_required(login_url='login')
 def deleteComment(request, pk):
     comment = Comment.objects.get(id=pk)
     post = comment.post
 
     if request.user != comment.author:
-        return HttpResponse('Your are not allowed here!!')
+        return HttpResponse("You are not allowed to delete this comment.")
 
     if request.method == 'POST':
         comment.delete()
         return redirect('post', pk=post.id)
     return render(request, 'blogapp/deleteComment.html', {'obj': comment})
 
-
+@login_required(login_url='login')
 def editComment(request, pk):
     comment = Comment.objects.get(id=pk)
+    if request.user != comment.author:
+        return HttpResponse("You are not allowed to edit this comment.")
+
     form = CommentForm(instance=comment)
     if request.method == 'POST':
         form = CommentForm(request.POST, instance=comment)
@@ -179,3 +190,8 @@ def editComment(request, pk):
     }
     
     return render(request, 'blogapp/editComment.html', context)
+
+
+
+
+    # if request.user != post.author and not request.user.is_staff and not request.user.is_superuser:

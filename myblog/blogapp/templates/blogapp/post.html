@@ -1,40 +1,41 @@
 {% extends 'main.html' %} {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>post</title>
-  </head>
-  <body>
-    <a href="/">home</a>
 
-    <h1>an image should be here</h1>
-    <h2>{{ post.title}}</h2>
-    {{ post.category }} this should be a link to all the health related blogs
-    <p><a href="{% url 'edit' post.pk %}">Edit blog Post</a></p>
-    <p><a href="{% url 'delete' post.pk %}">delete blog Post</a></p>
-    <h4>Authur {{post.created_at|timesince}}</h4>
-    <p>{{ post.body }}</p>
+<a href="/">home</a>
 
-    <h1>Add related links here</h1>
-    <!-- <h1>Add comments here</h1> -->
-    <h3>Comments Sections</h3>
-    {% for comment in post_comments %}
-    <p>
-      @{{comment.author.username}} -- {{ comment.body }} --
-      <span>{{ comment.created_at|timesince}} ago</span>
-      <p><a href="{% url 'edit-comment' comment.id %}">Edit Comment</a></p>
-      <p><a href="{% url 'delete' comment.id %}">Delete Comment</a></p>
-    </p>
-    <hr />
+<h1>an image should be here</h1>
+<h2>{{ post.title}}</h2>
+{{ post.category }} this should be a link to all the health related blogs
+<!-- Show edit/delete only if current user is the author -->
+{% if request.user == post.author %}
+<p><a href="{% url 'edit' post.pk %}">Edit blog Post</a></p>
+<p><a href="{% url 'delete' post.pk %}">delete blog Post</a></p>
+{% endif %}
+<h4>Authur {{post.created_at|timesince}}</h4>
+<p>{{ post.body }}</p>
 
-    {% endfor %}
-    <form action="" method="POST">
-      {%csrf_token%}
-      <input type="text" name="body" placeholder="add your comments here" />
-      <input type="button" value="Add" />
-    </form>
-  </body>
-</html>
-{% endblock %}
+<h1>Add related links here</h1>
+<!-- <h1>Add comments here</h1> -->
+{% if request.user.is_authenticated %}
+<h3>Comments Sections</h3>
+
+{% for comment in post_comments %}
+<p>
+  @{{comment.author.username}} -- {{ comment.body }} --
+  <span>{{ comment.created_at|timesince}} ago</span>
+  {% if request.user == comment.author %}
+  <a href="{% url 'edit-comment' comment.id %}">Edit Comment</a>
+  <a href="{% url 'delete' comment.id %}">Delete Comment</a>
+  {% endif %}
+</p>
+<hr />
+
+{% endfor %}
+
+<form action="" method="POST">
+  {%csrf_token%}
+  <input type="text" name="body" placeholder="add your comments here" />
+  <input type="submit" value="Add" />
+</form>
+{% else %}
+<p>You must <a href="{% url 'login' %}">log in</a> to add a comment.</p>
+{% endif %} {% endblock %}
