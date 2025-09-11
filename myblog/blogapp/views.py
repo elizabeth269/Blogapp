@@ -4,6 +4,7 @@ from .forms import PostForm, MyUserCreationForm
 from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth import authenticate,login, logout
+from django.http import HttpResponse
 
 
 # Create your views here.
@@ -81,8 +82,16 @@ def home(request):
 
 def post(request, pk):
     post = Post.objects.get(id=pk)
+    post_comments = post.post_comments.all()
+
+    if request.method == 'POST':
+        comment = Comment.objects.create(
+            author=request.user, post=post,body=request.POST.get('body')
+        )
+        # return redirect('post', pk=post.id)
     context = {
-        'posts': post
+        'post': post,
+        'post_comments': post_comments
     }
     return render(request, 'blogapp/post.html', context)
 
@@ -133,3 +142,21 @@ def deletePost(request, pk):
         return redirect('home')
     
     return render(request, 'blogapp/deletePost.html',{'obj': post})
+
+
+def comments(request):
+    post_comments = Comment.objects.all()
+
+    return render(request,'blogapp/comments.html', post_comments )
+
+
+# def deleteComment(request, pk):
+#     comment = Comment.objects.get(id=pk)
+
+#     if request.user != comment.author:
+#         return HttpResponse('Your are not allowed here!!')
+
+#     if request.method == 'POST':
+#         comment.delete()
+#         return redirect('home')
+#     return render(request, 'base/delete.html', {'obj': comment})
