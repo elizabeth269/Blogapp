@@ -22,9 +22,29 @@
 <p>
   @{{comment.author.username}} -- {{ comment.body }} --
   <span>{{ comment.created_at|timesince}} ago</span>
+  <a href="{% url 'like_comment' comment.id %}"
+    >👍 ({{ comment.like_count }})</a
+  >
+
   {% if request.user == comment.author %}
   <a href="{% url 'edit-comment' comment.id %}">Edit Comment</a>
   <a href="{% url 'delete' comment.id %}">Delete Comment</a>
+  <!-- Reply form -->
+<form action="{% url 'reply_comment' post.id comment.id %}" method="POST" style="margin-left:20px;">
+  {% csrf_token %}
+  <input type="text" name="body" placeholder="Reply here" />
+  <input type="submit" value="Reply" />
+</form>
+
+<!-- Show replies -->
+{% for reply in comment.replies.all %}
+  <div style="margin-left:40px;">
+    <p>@{{ reply.author.username }} -- {{ reply.body }} --
+    <span>{{ reply.created_at|timesince }} ago</span></p>
+    <a href="{% url 'like_comment' reply.id %}">👍 ({{ reply.like_count }})</a>
+  </div>
+{% endfor %}
+
   {% endif %}
 </p>
 <hr />

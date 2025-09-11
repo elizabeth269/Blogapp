@@ -46,6 +46,18 @@ class Comment(models.Model):
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    parent = models.ForeignKey(
+        'self', null=True, blank=True, related_name="replies", on_delete=models.CASCADE
+    )
+    likes = models.ManyToManyField(User, related_name="comment_likes", blank=True)
+
+    @property
+    def like_count(self):
+        return self.likes.count()
+
+    @property
+    def is_reply(self):
+        return self.parent is not None
 
 
     def __str__(self):

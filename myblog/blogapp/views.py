@@ -87,9 +87,13 @@ def post(request, pk):
     post_comments = post.post_comments.all()
 
     if request.method == 'POST':
-        comment = Comment.objects.create(
-            author=request.user, post=post,body=request.POST.get('body')
-        )
+        body=request.POST.get('body')
+        parent_id=request.POST.get('parent_id')
+        if body:
+            comment = Comment.objects.create(
+                author=request.user, post=post,body=body,
+                parent_id=parent_id if parent_id else None,
+            )
         # return redirect('post', pk=post.id)
     context = {
         'post': post,
@@ -152,10 +156,7 @@ def deletePost(request, pk):
     return render(request, 'blogapp/deletePost.html',{'obj': post})
 
 
-# def comments(request):
-#     post_comments = Comment.objects.all()
 
-#     return render(request,'blogapp/comments.html', post_comments )
 
 @login_required(login_url='login')
 def deleteComment(request, pk):
@@ -190,6 +191,16 @@ def editComment(request, pk):
     }
     
     return render(request, 'blogapp/editComment.html', context)
+
+def like_comment(request, comment_id):
+    comment = Comment.objects.get(id=comment_id)
+    if request.user in comment.likes.all():
+        comment.likes.remove(request.user)
+
+    else:
+        comment.likes.add(request.user)
+    return redirect('post', pk=comment.post.id)
+
 
 
 
