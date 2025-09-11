@@ -24,8 +24,8 @@
     <p>
       @{{comment.author.username}} -- {{ comment.body }} --
       <span>{{ comment.created_at|timesince}} ago</span>
-      <p><a href="{% url 'edit' post.pk %}">Edit Comment</a></p>
-      <p><a href="{% url 'delete' post.pk %}">Delete Comment</a></p>
+      <p><a href="{% url 'edit-comment' comment.id %}">Edit Comment</a></p>
+      <p><a href="{% url 'delete' comment.id %}">Delete Comment</a></p>
     </p>
     <hr />
 

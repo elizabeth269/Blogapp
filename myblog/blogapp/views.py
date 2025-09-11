@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Category, Comment, Post, User
-from .forms import PostForm, MyUserCreationForm
+from .forms import PostForm, MyUserCreationForm,CommentForm
 from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth import authenticate,login, logout
@@ -124,7 +124,7 @@ def editPost(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, f'you have edited {post.title} successfully')
-            return redirect('home')
+            return redirect('post', pk=post.id)
         
     context = {
         'form': form,
@@ -144,19 +144,37 @@ def deletePost(request, pk):
     return render(request, 'blogapp/deletePost.html',{'obj': post})
 
 
-def comments(request):
-    post_comments = Comment.objects.all()
+# def comments(request):
+#     post_comments = Comment.objects.all()
 
-    return render(request,'blogapp/comments.html', post_comments )
+#     return render(request,'blogapp/comments.html', post_comments )
 
 
-# def deleteComment(request, pk):
-#     comment = Comment.objects.get(id=pk)
+def deleteComment(request, pk):
+    comment = Comment.objects.get(id=pk)
 
-#     if request.user != comment.author:
-#         return HttpResponse('Your are not allowed here!!')
+    if request.user != comment.author:
+        return HttpResponse('Your are not allowed here!!')
 
-#     if request.method == 'POST':
-#         comment.delete()
-#         return redirect('home')
-#     return render(request, 'base/delete.html', {'obj': comment})
+    if request.method == 'POST':
+        comment.delete()
+        return redirect('home')
+    return render(request, 'base/delete.html', {'obj': comment})
+
+
+def editComment(request, pk):
+    comment = Comment.objects.get(id=pk)
+    form = CommentForm(instance=comment)
+    if request.method == 'POST':
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'you have edited {comment.body} successfully')
+            return redirect('post',pk=comment.post.id)
+        
+    context = {
+        'form': form,
+        'comment': comment
+    }
+    
+    return render(request, 'blogapp/editComment.html', context)

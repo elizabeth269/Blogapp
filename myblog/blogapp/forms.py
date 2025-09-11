@@ -1,11 +1,16 @@
 from django.forms import ModelForm
-from .models import Post,User
+from .models import Post,User, Comment
 from django.contrib.auth.forms import UserCreationForm
 
 class PostForm(ModelForm):
     class Meta:
         model = Post
         fields = '__all__'
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['body']
         # exclude = []
 
 class MyUserCreationForm(UserCreationForm):
