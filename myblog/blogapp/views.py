@@ -152,14 +152,15 @@ def deletePost(request, pk):
 
 def deleteComment(request, pk):
     comment = Comment.objects.get(id=pk)
+    post = comment.post
 
     if request.user != comment.author:
         return HttpResponse('Your are not allowed here!!')
 
     if request.method == 'POST':
         comment.delete()
-        return redirect('home')
-    return render(request, 'base/delete.html', {'obj': comment})
+        return redirect('post', pk=post.id)
+    return render(request, 'blogapp/deleteComment.html', {'obj': comment})
 
 
 def editComment(request, pk):
