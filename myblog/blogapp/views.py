@@ -82,19 +82,19 @@ def home(request):
     return render(request, 'blogapp/home.html', context)
 
 
-def post(request, pk):
+def post(request, pk, parent_id=None):
     post = Post.objects.get(id=pk)
     post_comments = post.post_comments.all()
 
     if request.method == 'POST':
         body=request.POST.get('body')
-        parent_id=request.POST.get('parent_id')
+        # parent_id=request.POST.get('parent_id')
         if body:
             comment = Comment.objects.create(
                 author=request.user, post=post,body=body,
                 parent_id=parent_id if parent_id else None,
             )
-        # return redirect('post', pk=post.id)
+        return redirect('post', pk=post.id)
     context = {
         'post': post,
         'post_comments': post_comments
