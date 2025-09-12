@@ -48,7 +48,7 @@ def registration(request):
     if request.method == 'POST':
         form = MyUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
+            user = form.save(commit=False) # create the user but don't save it yet because i might want to modify the user object before saving it in the database
             user.username = user.username.lower()
             user.save()
             messages.success(request, 'Registration successful.')
@@ -203,6 +203,7 @@ def like_comment(request, comment_id):
 
 
 
-
+def reply_comment(request):
+    pass
 
     # if request.user != post.author and not request.user.is_staff and not request.user.is_superuser:

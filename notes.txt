@@ -16,3 +16,6 @@ Functionality to create, edit, delete, and publish blog posts.
 
 other Features:
 Comments, likes, user roles (admin/guest), image uploads, and search capabilities. 
+
+
+look into paginator
