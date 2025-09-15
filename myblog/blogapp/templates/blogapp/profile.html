@@ -1,4 +1,5 @@
 <a href="/">home</a>
 <h1>This is the profile page</h1>
 <p>{{author.username}}</p>
-<p></p>
+
+{% include 'blogapp/comment_feed.html' with comments=author.post_comments.all %}

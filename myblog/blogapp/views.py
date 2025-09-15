@@ -120,6 +120,13 @@ def userProfile(request,pk):
     }
     return render(request, 'blogapp/profile.html', context)
 
+def commentFeed(request):
+    comments = Comment.objects.all()
+    context = {
+        'comments': comments,
+    }
+    return render(request, 'blogapp/comment_feed.html', context)
+
 @login_required(login_url='login')
 def createPost(request):
     form = PostForm()

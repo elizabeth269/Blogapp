@@ -1,0 +1,13 @@
+<h2>All Comments</h2>
+
+<ul>
+  {% for comment in comments %}
+  <li>
+    <strong>{{ comment.author.username }}</strong>: {{ comment.body }}
+    <br />
+    <small>{{ comment.created_at }}</small>
+  </li>
+  {% empty %}
+  <li>No comments yet.</li>
+  {% endfor %}
+</ul>
