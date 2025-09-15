@@ -125,7 +125,7 @@ def commentFeed(request):
     context = {
         'comments': comments,
     }
-    return render(request, 'blogapp/comment_feed.html', context)
+    return render(request, 'blogapp/comment_feed.html', {'comments': comments})
 
 @login_required(login_url='login')
 def createPost(request):
