@@ -103,26 +103,22 @@ def post(request, pk):
 
 def reply_comment(request):
     pass
-#     post = Post.objects.get(id=pk)
-#     post_comments = post.post_comments.all()
-#     comment = post_comments.objects.get(parent_id=pk)
-#     if request.method == 'POST':
-#         body=request.POST.get('body')
-#         # parent_id=request.POST.get('parent_id')
-#         if body:
-#             comment = Comment.objects.create(
-#                 author=request.user, post=post,body=body,
-#                 # parent_id=parent_id if parent_id else None,
-#             )
-#         return redirect('post', pk=post.id)
-#     context = {
-#         'post': post,
-#         'post_comments': post_comments
-#     }
-#     return render(request, 'blogapp/post.html', context)
 
 
-
+def userProfile(request,pk):
+    author = User.objects.get(id=pk)
+    posts = author.posts.all()
+    comment = author.comment_set.all()
+    comment_count = comment.count()
+    categories = Category.objects.all()
+    context = {
+        'author': author,
+        'comment': comment,
+        'posts': posts,
+        'categories': categories,
+        'comment_count':comment_count
+    }
+    return render(request, 'blogapp/profile.html', context)
 
 @login_required(login_url='login')
 def createPost(request):
