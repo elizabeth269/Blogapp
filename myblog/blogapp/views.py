@@ -82,7 +82,7 @@ def home(request):
     return render(request, 'blogapp/home.html', context)
 
 
-def post(request, pk, parent_id=None):
+def post(request, pk):
     post = Post.objects.get(id=pk)
     post_comments = post.post_comments.all()
 
@@ -92,7 +92,7 @@ def post(request, pk, parent_id=None):
         if body:
             comment = Comment.objects.create(
                 author=request.user, post=post,body=body,
-                parent_id=parent_id if parent_id else None,
+                # parent_id=parent_id if parent_id else None,
             )
         return redirect('post', pk=post.id)
     context = {
@@ -100,6 +100,29 @@ def post(request, pk, parent_id=None):
         'post_comments': post_comments
     }
     return render(request, 'blogapp/post.html', context)
+
+def reply_comment(request):
+    pass
+#     post = Post.objects.get(id=pk)
+#     post_comments = post.post_comments.all()
+#     comment = post_comments.objects.get(parent_id=pk)
+#     if request.method == 'POST':
+#         body=request.POST.get('body')
+#         # parent_id=request.POST.get('parent_id')
+#         if body:
+#             comment = Comment.objects.create(
+#                 author=request.user, post=post,body=body,
+#                 # parent_id=parent_id if parent_id else None,
+#             )
+#         return redirect('post', pk=post.id)
+#     context = {
+#         'post': post,
+#         'post_comments': post_comments
+#     }
+#     return render(request, 'blogapp/post.html', context)
+
+
+
 
 @login_required(login_url='login')
 def createPost(request):
@@ -203,7 +226,6 @@ def like_comment(request, comment_id):
 
 
 
-def reply_comment(request):
-    pass
+
 
     # if request.user != post.author and not request.user.is_staff and not request.user.is_superuser:

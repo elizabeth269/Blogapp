@@ -9,7 +9,7 @@
   <body>
     <h1>Elizabeth's Blog</h1>
     {% if user.is_authenticated%}
-    <p>welcom {{user.username}}</p>
+    <p>welcome {{user.username}}</p>
     <p><a href="{% url 'logout' %}">logout</a></p>
     {% else %}
     <p><a href="{%url 'login' %}">login</a></p>
@@ -21,23 +21,26 @@
     <p>{{posts_count}} posts found</p>
     <hr />
     {% for post in posts %}
-    <p>an image should be here</p>
-    {% if category %}
-    <p>
-      {{ post.category }} this should be a link to all the health related blogs
-    </p>
-    {%endif%}
+    <div>
+      <p>an image should be here</p>
+      {% if category %}
+      <p>
+        {{ post.category }} this should be a link to all the health related
+        blogs
+      </p>
+      {%endif%}
 
-    <a href="{% url 'post' post.id %}">
-      <h2>{{ post.title}}</h2>
-    </a>
-    <p>{{ post.description }}</p>
-    <h4>Authur {{post.created_at|timesince}}</h4>
-    {% if request.user == post.author %}
-    <p><a href="{% url 'edit' post.pk %}">Edit blog Post</a></p>
-    <p><a href="{% url 'delete' post.pk %}">delete blog Post</a></p>
-    {% endif %}
-    <hr />
+      <a href="{% url 'post' post.id %}">
+        <h2>{{ post.title}}</h2>
+      </a>
+      <p>{{ post.description }}</p>
+      <h4>Authur {{post.created_at|timesince}}</h4>
+      {% if request.user == post.author %}
+      <p><a href="{% url 'edit' post.pk %}">Edit blog Post</a></p>
+      <p><a href="{% url 'delete' post.pk %}">delete blog Post</a></p>
+      {% endif %}
+      <hr />
+    </div>
 
     {% endfor %}
   </body>
