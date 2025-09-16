@@ -24,7 +24,9 @@
     <div>
       {% if post.image %}
       <div><img src="{{ post.image.url }}" alt="Post Image" /></div>
-      {% endif %} {% if category %}
+      {% endif %}
+      <p>category</p>
+      {% if category %}
       <p>
         {{ post.category }} this should be a link to all the health related
         blogs

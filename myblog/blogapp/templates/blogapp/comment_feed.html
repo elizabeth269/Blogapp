@@ -4,13 +4,19 @@
   {% for comment in comments %}
   <li>
     <strong>{{ comment.author.username }}</strong>: {{ comment.body }}
-    <br />
+    <p>
+      replied to “<a href="{% url 'post' comment.post.id %}">{{comment.post}}</a
+      >”
+    </p>
     <small>{{ comment.created_at }}</small>
   </li>
   {% if request.user == comment.author %}
   <a href="{% url 'edit-comment' comment.id %}">Edit Comment</a>
   <a href="{% url 'delete' comment.id %}">Delete Comment</a>
-  {% endif %} {% empty %}
+
+  {% endif %}
+  <br />
+  <br />{% empty %}
   <li>No comments yet.</li>
 
   {% endfor %}
