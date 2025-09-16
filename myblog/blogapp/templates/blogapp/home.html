@@ -22,8 +22,9 @@
     <hr />
     {% for post in posts %}
     <div>
-      <p>an image should be here</p>
-      {% if category %}
+      {% if post.image %}
+      <div><img src="{{ post.image.url }}" alt="Post Image" /></div>
+      {% endif %} {% if category %}
       <p>
         {{ post.category }} this should be a link to all the health related
         blogs
