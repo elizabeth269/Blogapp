@@ -22,3 +22,5 @@ class UserForm(ModelForm):
     class Meta:
         model = User
         fields = ['name', 'avatar', 'bio', 'email', 'username']
+
+    
