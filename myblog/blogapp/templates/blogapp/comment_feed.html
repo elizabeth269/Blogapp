@@ -1,4 +1,4 @@
-<h2>All Comments</h2>
+<h2>All Comments from {{author.username|capfirst}}</h2>
 
 <ul>
   {% for comment in comments %}
@@ -7,7 +7,11 @@
     <br />
     <small>{{ comment.created_at }}</small>
   </li>
-  {% empty %}
+  {% if request.user == comment.author %}
+  <a href="{% url 'edit-comment' comment.id %}">Edit Comment</a>
+  <a href="{% url 'delete' comment.id %}">Delete Comment</a>
+  {% endif %} {% empty %}
   <li>No comments yet.</li>
+
   {% endfor %}
 </ul>

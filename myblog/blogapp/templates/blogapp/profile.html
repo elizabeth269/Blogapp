@@ -1,5 +1,11 @@
 <a href="/">home</a>
 <h1>This is the profile page</h1>
-<p>{{author.username}}</p>
-
+<h3>{{author.username|capfirst}}</h3>
+<p>{{author.email}}</p>
+<div>Profile-image<img src="{{author.avatar.url}}" alt="" /></div>
+{% if request.user == author %}
+<a href="{% url 'update-user' author.id %}">Edit Comment</a>
+<a href="{% url 'delete-user' author.id %}">Delete Comment</a>
+{% endif %}
+<p>{{author.bio}}</p>
 {% include 'blogapp/comment_feed.html' %}

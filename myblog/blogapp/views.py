@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Category, Comment, Post, User
-from .forms import PostForm, MyUserCreationForm,CommentForm
+from .forms import PostForm, MyUserCreationForm,CommentForm, UserForm
 from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth import authenticate,login, logout
@@ -108,17 +108,51 @@ def reply_comment(request):
 def userProfile(request,pk):
     author = User.objects.get(id=pk)
     posts = author.posts.all()
-    comment = author.comment_set.all()
-    comment_count = comment.count()
+    comments = author.comment_set.all()
+    comment_count = comments.count()
     categories = Category.objects.all()
     context = {
         'author': author,
-        'comment': comment,
+        'comments': comments,
         'posts': posts,
         'categories': categories,
         'comment_count':comment_count
     }
     return render(request, 'blogapp/profile.html', context)
+
+def updateUser(request, pk):
+    author = User.objects.get(id=pk)
+    if request.user != author:
+        return HttpResponse("You are not allowed to edit this profile.")
+
+    form = UserForm(instance=author)
+    if request.method == 'POST':
+        form = UserForm(request.POST, request.FILES, instance=author)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'you have edited your profile successfully')
+            return redirect('profile', pk=author.id)
+        
+    context = {
+        'form': form,
+        
+    }
+    
+    return render(request, 'blogapp/updateUser.html', context)
+
+
+def deleteUser(request, pk):
+    author = User.objects.get(id=pk)
+    if request.user != author:
+        return HttpResponse("You are not allowed to delete this post.")
+
+    if request.method == "POST":
+        author.delete()
+        messages.success(request, f'you have deleted your profile successfully')
+        return redirect('home')
+    
+    return render(request, 'blogapp/deletePost.html',{'obj': author})
+
 
 def commentFeed(request):
     comments = Comment.objects.all()

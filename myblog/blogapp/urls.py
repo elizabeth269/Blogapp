@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('loginPage', views.loginPage,name='login'),
@@ -8,6 +10,8 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('post/<str:pk>/', views.post, name='post'),
     path('profile/<str:pk>/', views.userProfile, name='profile'),
+    path('updateUser/<str:pk>/', views.updateUser, name='update-user'),
+    path('deleteUser/<str:pk>/', views.deleteUser, name='delete-user'),
     path('creatPost', views.createPost, name='create'),
     path('editPost/<str:pk>/', views.editPost, name='edit'),
     path('deletePost/<str:pk>/', views.deletePost, name='delete'),
@@ -18,3 +22,6 @@ urlpatterns = [
     path('post/<str:pk>/reply/<str:parent_id>/', views.reply_comment, name='reply_comment'),
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
