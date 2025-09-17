@@ -204,7 +204,17 @@ def editPost(request, pk):
         category, created = Category.objects.get_or_create(name=category_name)
         form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
-            form.save()
+            post = form.save(commit=False)
+            new_category_name = form.cleaned_data.get('new_category'
+            )
+            if new_category_name:
+                category, created = Category.objects.get_or_create(name=new_category_name)
+
+            else:
+                category = form.cleaned_date.get('category')
+
+            post.category = category
+            post.save()
             messages.success(request, f'you have edited {post.title} successfully')
             return redirect('post', pk=post.id)
         
