@@ -1,8 +1,10 @@
 from django.forms import ModelForm
+# from django import forms
 from .models import Post,User, Comment
 from django.contrib.auth.forms import UserCreationForm
 
 class PostForm(ModelForm):
+    
     class Meta:
         model = Post
         fields = '__all__'

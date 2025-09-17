@@ -71,12 +71,14 @@ def home(request):
         Q(category__name__icontains=q) |
         Q(description__icontains=q)
     )
+    categories = Category.objects.all()[0:5]
     posts_count = posts.count()
     # messages.error(request, 'an error occured')
 
     context ={
         'posts': posts,
         'posts_count': posts_count,
+        'categories': categories,
 
     }
     return render(request, 'blogapp/home.html', context)
@@ -163,11 +165,18 @@ def commentFeed(request):
 
 @login_required(login_url='login')
 def createPost(request):
-    form = PostForm()
+    # form = PostForm()
+    categories = Category.objects.all()
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
-            form.save()
+            post = form.save(commit=False)
+            post.author = request.user
+
+            category_name = form.cleaned_data.get('category')
+            category, created = Category.objects.get_or_create(name=category_name)
+            post.category = category
+            post.save()
             messages.success(request, "Blog post has been created successfully")
             return redirect('home')
         else: 
@@ -176,7 +185,7 @@ def createPost(request):
         form = PostForm()
         
     context = {
-        'form': form
+        'form': form, 'categories':categories
     }
         
     return render(request, 'blogapp/createPost.html', context)
@@ -184,16 +193,21 @@ def createPost(request):
 @login_required(login_url='login')
 def editPost(request, pk):
     post = Post.objects.get(id=pk)
+    categories = Category.objects.all()
+    form = PostForm(instance=post)
+
     if request.user != post.author:
         return HttpResponse("You are not allowed to edit this post.")
-
-    form = PostForm(instance=post)
+    
     if request.method == 'POST':
+        category_name = request.POST.get('category')
+        category, created = Category.objects.get_or_create(name=category_name)
         form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save()
             messages.success(request, f'you have edited {post.title} successfully')
             return redirect('post', pk=post.id)
+        
         
     context = {
         'form': form,
